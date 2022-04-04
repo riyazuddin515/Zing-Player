@@ -19,14 +19,20 @@ class MainViewModel @Inject constructor(
     private val _songs = MutableLiveData<List<Song>>()
     val songs: LiveData<List<Song>> = _songs
 
+    private val _mediaItems = MutableLiveData<List<MediaItem>>()
+    val mediaItems: LiveData<List<MediaItem>> = _mediaItems
+
     fun getAllSongs() {
         viewModelScope.launch {
-            _songs.postValue(firebaseMusicDatabase.getSongsList())
-
-//            MediaItem.Builder()
-//                .setUri(song.songUrl)
-//                .setMediaId(song.mediaID)
-//                .build()
+            val list = firebaseMusicDatabase.getSongsList()
+            val mediaItems = list.map { song ->
+                MediaItem.Builder()
+                    .setUri(song.songUrl)
+                    .setMediaId(song.mediaID)
+                    .build()
+            }
+            _songs.postValue(list)
+            _mediaItems.postValue(mediaItems)
         }
     }
 

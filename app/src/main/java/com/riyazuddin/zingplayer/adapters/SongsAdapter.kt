@@ -16,12 +16,13 @@ class SongsAdapter @Inject constructor(
 
     inner class SongsViewHolder(private val binding: ItemSongBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(song: Song) {
+        fun bind(position: Int) {
+            val song = list[position]
             binding.tvTitle.text = song.title
             glide.load(song.imageUrl).into(binding.ivSong)
             binding.root.setOnClickListener {
                 songClickListener?.let {
-                    it(song)
+                    it(song, position)
                 }
             }
         }
@@ -49,14 +50,14 @@ class SongsAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(position)
     }
 
     override fun getItemCount(): Int = list.size
 
 
-    private var songClickListener: ((Song) -> Unit)? = null
-    fun setOnSongClickListener(listener: (Song) -> Unit){
+    private var songClickListener: ((Song, Int) -> Unit)? = null
+    fun setOnSongClickListener(listener: (Song, Int) -> Unit){
         songClickListener = listener
     }
 }
