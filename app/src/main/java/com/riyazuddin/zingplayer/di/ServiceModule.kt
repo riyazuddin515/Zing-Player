@@ -5,7 +5,6 @@ import com.google.android.exoplayer2.C.CONTENT_TYPE_MUSIC
 import com.google.android.exoplayer2.C.USAGE_MEDIA
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.upstream.DefaultDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,11 +32,5 @@ object ServiceModule {
         .setAudioAttributes(audioAttributes, true)
         .setHandleAudioBecomingNoisy(true)
         .build()
-
-    @ServiceScoped
-    @Provides
-    fun provideDataSourceFactory(
-        @ApplicationContext context: Context
-    ) = DefaultDataSource.Factory(context).createDataSource()
 
 }
