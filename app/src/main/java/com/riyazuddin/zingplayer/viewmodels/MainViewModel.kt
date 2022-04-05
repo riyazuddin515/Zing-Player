@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.MediaMetadata
 import com.riyazuddin.zingplayer.data.model.Song
 import com.riyazuddin.zingplayer.repository.remote.IFirebaseMusicDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,7 @@ class MainViewModel @Inject constructor(
                 MediaItem.Builder()
                     .setUri(song.songUrl)
                     .setMediaId(song.mediaID)
+                    .setMediaMetadata(MediaMetadata.Builder().setTitle(song.title).build())
                     .build()
             }
             _songs.postValue(list)

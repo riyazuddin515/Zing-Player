@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.riyazuddin.zingplayer.adapters.SongsAdapter
 import com.riyazuddin.zingplayer.data.model.Song
 import com.riyazuddin.zingplayer.databinding.ActivityMainBinding
+import com.riyazuddin.zingplayer.other.Constants.START_SERVICE_INTENT_ACTION
 import com.riyazuddin.zingplayer.services.MusicService
 import com.riyazuddin.zingplayer.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         subscribeToObservers()
         viewModel.getAllSongs()
 
-        songsAdapter.setOnSongClickListener { _, position: Int ->
+        songsAdapter.setOnSongClickListener { _ , position: Int ->
             musicService.seek(position)
         }
     }
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val intent = Intent(this, MusicService::class.java)
+        intent.action = START_SERVICE_INTENT_ACTION
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         startService(intent)
         Log.i(TAG, "onStart: ")

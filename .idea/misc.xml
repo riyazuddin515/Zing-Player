@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/drawable/ic_baseline_downloading_24.xml" value="0.126" />
+        <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/drawable/ic_pause.xml" value="0.1" />
+        <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/drawable/ic_skip_next.xml" value="0.1875" />
+        <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/drawable/ic_skip_previous.xml" value="0.1875" />
         <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/layout/activity_main.xml" value="0.2359375" />
         <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/layout/item_song.xml" value="0.25" />
+        <entry key="..\:/Users/riyaz/AndroidStudioProjects/ZingPlayer2/app/src/main/res/layout/music_layout.xml" value="0.21944444444444444" />
       </map>
     </option>
   </component>
