@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "584005914368",
+    "project_id": "zing-player",
+    "storage_bucket": "zing-player.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584005914368:android:a8ea692673d0a92dfaede5",
+        "android_client_info": {
+          "package_name": "com.riyazuddin.zingplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584005914368-vljrr9b0ri7t20gldoi7qbpolnt5ma27.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCuVllW3_-zmTpubavOHaIc0LccBgKvAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584005914368-vljrr9b0ri7t20gldoi7qbpolnt5ma27.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
