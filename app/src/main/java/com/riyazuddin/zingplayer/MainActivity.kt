@@ -4,6 +4,7 @@ import android.content.*
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
@@ -102,6 +103,8 @@ class MainActivity : AppCompatActivity() {
         else
             binding.ivPlayOrPause.setImageResource(R.drawable.ic_play)
         binding.tvTitle.text = musicService.currentMusicTitle()
+        binding.tvTitle.ellipsize = TextUtils.TruncateAt.MARQUEE
+        binding.tvTitle.isSelected = true
         glide.load(viewModel.getSongImageUrl(musicService.currentMediaIndex())).into(binding.ivSongThumbnail)
         binding.musicPlayerLayout.isVisible = true
     }
