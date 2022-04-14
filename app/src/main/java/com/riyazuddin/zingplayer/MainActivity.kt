@@ -31,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         var c = 0
         listResult.items.forEach { storageRef ->
             val url = storageRef.downloadUrl.await()
-            val name =
-                storageRef.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            val name = storageRef.name.lowercase().removeSuffix(".mp3").capitalize()
             val song = Song((++c).toString(), name, url.toString(), "")
             val dId = if (c < 10) "media0$c" else "media$c"
             songsDB.document(dId).set(song).await()
