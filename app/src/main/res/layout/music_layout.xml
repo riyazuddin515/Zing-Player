@@ -8,25 +8,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:padding="5dp"
-            android:text="Music Playing"
+            tools:text="Title"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivStop"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_close" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="center"
+            android:contentDescription="@string/close"/>
 
     </LinearLayout>
 
@@ -41,13 +44,15 @@
             android:layout_height="40dp"
             android:src="@drawable/ic_skip_previous"
             android:visibility="invisible"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            android:contentDescription="@string/skip_previous"/>
 
         <ImageView
             android:id="@+id/ivPlayOrPause"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_play" />
+            android:src="@drawable/ic_play"
+            android:contentDescription="@string/play_pause"/>
 
         <ImageView
             android:id="@+id/ivNext"
@@ -55,7 +60,8 @@
             android:layout_height="40dp"
             android:src="@drawable/ic_skip_next"
             android:visibility="invisible"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            android:contentDescription="@string/skip_next"/>
 
     </LinearLayout>
 

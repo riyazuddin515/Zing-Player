@@ -26,6 +26,7 @@ import com.riyazuddin.zingplayer.other.Constants.TITLE
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.random.Random
 
 private const val TAG = "LogITag"
 
@@ -34,61 +35,52 @@ class MusicNotificationManager @Inject constructor(
     @ApplicationContext val context: Context
 ) {
 
+    private val randomNumber
+        get() = Random.nextInt(0, 999999999)
+
     fun createNotification(
         title: String,
         showPlay: Boolean,
         showPrevious: Boolean,
         showNext: Boolean
     ): Notification {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createChannel()
 
-        val playOrPausePI: PendingIntent
+        val playOrPauseIntent = Intent(context, MusicService::class.java)
         if (showPlay) {
-            val playIntent = Intent(context, MusicService::class.java)
-            playIntent.action = MUSIC_PLAY
-            playIntent.putExtra(TITLE, title)
-            playIntent.putExtra(SHOW_PREVIOUS, showPrevious)
-            playIntent.putExtra(SHOW_NEXT, showNext)
-            playOrPausePI =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    PendingIntent.getService(context, 500, playIntent, PendingIntent.FLAG_MUTABLE)
-                } else {
-                    PendingIntent.getService(
-                        context,
-                        500,
-                        playIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                }
+            playOrPauseIntent.action = MUSIC_PLAY
         } else {
-            val pauseIntent = Intent(context, MusicService::class.java)
-            pauseIntent.action = MUSIC_PAUSE
-            pauseIntent.putExtra(TITLE, title)
-            pauseIntent.putExtra(SHOW_PREVIOUS, showPrevious)
-            pauseIntent.putExtra(SHOW_NEXT, showNext)
-            playOrPausePI =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    PendingIntent.getService(context, 500, pauseIntent, PendingIntent.FLAG_MUTABLE)
-                } else {
-                    PendingIntent.getService(
-                        context,
-                        500,
-                        pauseIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                }
+            playOrPauseIntent.action = MUSIC_PAUSE
+        }
+        val playOrPausePI: PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getService(
+                context,
+                randomNumber,
+                playOrPauseIntent,
+                PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            PendingIntent.getService(
+                context,
+                randomNumber,
+                playOrPauseIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         val stopIntent = Intent(context, MusicService::class.java)
         stopIntent.action = MUSIC_STOP
-        stopIntent.putExtra(TITLE, title)
-        stopIntent.putExtra(SHOW_PREVIOUS, showPrevious)
-        stopIntent.putExtra(SHOW_NEXT, showNext)
         val stopPI = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getService(context, 500, stopIntent, PendingIntent.FLAG_MUTABLE)
+            PendingIntent.getService(context, randomNumber, stopIntent, PendingIntent.FLAG_MUTABLE)
         } else {
-            PendingIntent.getService(context, 500, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getService(
+                context,
+                randomNumber,
+                stopIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         val notificationLayout = RemoteViews(context.packageName, R.layout.music_layout)
@@ -100,25 +92,20 @@ class MusicNotificationManager @Inject constructor(
         }
         notificationLayout.setOnClickPendingIntent(R.id.ivPlayOrPause, playOrPausePI)
         notificationLayout.setOnClickPendingIntent(R.id.ivStop, stopPI)
-        Log.i(TAG, "createNotification: $showPrevious")
-        Log.i(TAG, "createNotification: $showNext")
         if (showPrevious) {
             val skipPreviousIntent = Intent(context, MusicService::class.java)
             skipPreviousIntent.action = SKIP_PREVIOUS
-            skipPreviousIntent.putExtra(TITLE, title)
-            skipPreviousIntent.putExtra(SHOW_PREVIOUS, showPrevious)
-            skipPreviousIntent.putExtra(SHOW_NEXT, showNext)
             val skipPreviousPI = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getService(
                     context,
-                    500,
+                    randomNumber,
                     skipPreviousIntent,
                     PendingIntent.FLAG_MUTABLE
                 )
             } else {
                 PendingIntent.getService(
                     context,
-                    500,
+                    randomNumber,
                     skipPreviousIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
@@ -129,15 +116,17 @@ class MusicNotificationManager @Inject constructor(
         if (showNext) {
             val skipNextIntent = Intent(context, MusicService::class.java)
             skipNextIntent.action = SKIP_NEXT
-            skipNextIntent.putExtra(TITLE, title)
-            skipNextIntent.putExtra(SHOW_PREVIOUS, showPrevious)
-            skipNextIntent.putExtra(SHOW_NEXT, showNext)
             val skipNextPI = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getService(context, 500, skipNextIntent, PendingIntent.FLAG_MUTABLE)
+                PendingIntent.getService(
+                    context,
+                    randomNumber,
+                    skipNextIntent,
+                    PendingIntent.FLAG_MUTABLE
+                )
             } else {
                 PendingIntent.getService(
                     context,
-                    500,
+                    randomNumber,
                     skipNextIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
@@ -159,15 +148,15 @@ class MusicNotificationManager @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
-        val channel = NotificationChannel(
-            MUSIC_CHANNEL,
-            "This channel is used to show music notification",
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         val notificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (notificationManager.getNotificationChannel(MUSIC_CHANNEL) == null) {
+            val channel = NotificationChannel(
+                MUSIC_CHANNEL,
+                "This channel is used to show music notification",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             notificationManager.createNotificationChannel(channel)
         }
     }

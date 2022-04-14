@@ -19,7 +19,8 @@ class SongsAdapter @Inject constructor(
         fun bind(position: Int) {
             val song = list[position]
             binding.tvTitle.text = song.title
-            glide.load(song.imageUrl).into(binding.ivSong)
+            if(song.imageUrl.isNotEmpty())
+                glide.load(song.imageUrl).into(binding.ivSong)
             binding.root.setOnClickListener {
                 songClickListener?.let {
                     it(song, position)
@@ -34,7 +35,7 @@ class SongsAdapter @Inject constructor(
         }
 
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
-            return oldItem.mediaID == newItem.mediaID
+            return oldItem.mediaId == newItem.mediaId
         }
     }
     private val differ = AsyncListDiffer(this, differCallback)

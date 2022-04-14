@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
             val mediaItems = list.map { song ->
                 MediaItem.Builder()
                     .setUri(song.songUrl)
-                    .setMediaId(song.mediaID)
+                    .setMediaId(song.mediaId)
                     .setMediaMetadata(MediaMetadata.Builder().setTitle(song.title).build())
                     .build()
             }
@@ -38,4 +38,5 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getMediaItems() = mediaItems.value ?: emptyList()
 }

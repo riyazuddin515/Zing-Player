@@ -5,16 +5,19 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.riyazuddin.zingplayer.MainActivity
+import com.riyazuddin.zingplayer.other.Constants.BROADCAST_ACTION
+import com.riyazuddin.zingplayer.other.Constants.MEDIA_ITEM_TRANSITION
+import com.riyazuddin.zingplayer.other.Constants.MUSIC_BROADCAST
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_PAUSE
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_PLAY
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_STOP
-import com.riyazuddin.zingplayer.other.Constants.SHOW_NEXT
-import com.riyazuddin.zingplayer.other.Constants.SHOW_PREVIOUS
 import com.riyazuddin.zingplayer.other.Constants.SKIP_NEXT
 import com.riyazuddin.zingplayer.other.Constants.SKIP_PREVIOUS
-import com.riyazuddin.zingplayer.other.Constants.TITLE
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,36 +38,51 @@ class MusicService : Service() {
         fun getMusicService() = this@MusicService
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        Log.i(TAG, "onCreate: service")
+        val a = object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                super.onIsPlayingChanged(isPlaying)
+                if (isPlaying) {
+                    sendBroadcastUpdates(MUSIC_PLAY)
+                    showNotification(currentMusicTitle(), !isPlaying, hasPrevious(), hasNext())
+                } else {
+                    sendBroadcastUpdates(MUSIC_PAUSE)
+                    showNotification(currentMusicTitle(), true, hasPrevious(), hasNext())
+                }
+            }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                sendBroadcastUpdates(MEDIA_ITEM_TRANSITION)
+            }
+        }
+        exoPlayer.addListener(a)
+    }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val showPrevious = intent.getBooleanExtra(SHOW_PREVIOUS, false)
-        val showNext = intent.getBooleanExtra(SHOW_NEXT, false)
-        Log.i(TAG, "onStartCommand: ${intent.action}")
+        Log.i(TAG, "onStartCommand: ")
         when (intent.action) {
             MUSIC_PLAY -> {
                 play()
-//                sendCompleteBroadcast(MUSIC_PLAY)
-                showNotification(intent.getStringExtra(TITLE)!!, false, showPrevious, showNext)
             }
             MUSIC_PAUSE -> {
                 pause()
-//                sendCompleteBroadcast(MUSIC_PAUSE)
-                showNotification(intent.getStringExtra(TITLE)!!, true, showPrevious, showNext)
             }
             MUSIC_STOP -> {
                 stop()
-//                sendCompleteBroadcast(MUSIC_STOP)
+                sendBroadcastUpdates(MUSIC_STOP)
                 stopForeground(true)
                 stopSelf()
             }
             SKIP_PREVIOUS -> {
-                Log.i(TAG, "onStartCommand: ${exoPlayer.currentMediaItemIndex}")
-                seek(exoPlayer.currentMediaItemIndex - 1)
+                playPrevious()
             }
             SKIP_NEXT -> {
-                seek(exoPlayer.currentMediaItemIndex + 1)
+                playNext()
             }
         }
-
         return START_STICKY
     }
 
@@ -84,22 +102,39 @@ class MusicService : Service() {
         exoPlayer.pause()
     }
 
-    fun stop() {
-        exoPlayer.stop()
-        exoPlayer.release()
+    fun playPrevious() {
+        seek(exoPlayer.currentMediaItemIndex - 1)
     }
 
+    fun playNext() {
+        seek(exoPlayer.currentMediaItemIndex + 1)
+    }
+
+    private fun stop() {
+        exoPlayer.stop()
+    }
+
+    fun hasPrevious() = exoPlayer.hasPreviousMediaItem()
+    fun hasNext() = exoPlayer.hasNextMediaItem()
+    fun currentMusicTitle() = exoPlayer.currentMediaItem?.mediaMetadata?.title.toString()
+
     fun seek(mediaItemIndex: Int) {
-        if (isPlaying())
-            pause()
-        exoPlayer.seekTo(mediaItemIndex, 0L)
-        play()
-        showNotification(
-            exoPlayer.currentMediaItem!!.mediaMetadata.title.toString(),
-            false,
-            exoPlayer.hasPreviousMediaItem(),
-            exoPlayer.hasNextMediaItem()
-        )
+        try {
+            Log.i(TAG, "seek: ${exoPlayer.mediaItemCount}")
+            if (isPlaying()) {
+                pause()
+            }
+            exoPlayer.seekTo(mediaItemIndex, 0L)
+            play()
+            showNotification(
+                currentMusicTitle(),
+                false,
+                hasPrevious(),
+                hasNext()
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "seek: ", e)
+        }
     }
 
     private fun showNotification(
@@ -111,5 +146,22 @@ class MusicService : Service() {
         val notification =
             musicNotificationManager.createNotification(title, showPlay, showPrevious, showNext)
         startForeground(5, notification)
+    }
+
+    private fun sendBroadcastUpdates(action: String) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.action = MUSIC_BROADCAST
+        intent.putExtra(BROADCAST_ACTION, action)
+        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        return true
+    }
+
+    override fun onDestroy() {
+        Log.i(TAG, "onDestroy: Service")
+        exoPlayer.release()
+        super.onDestroy()
     }
 }

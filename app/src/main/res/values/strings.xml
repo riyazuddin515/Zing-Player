@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Zing Player</string>
+    <string name="skip_previous">skip_previous</string>
+    <string name="play_pause">play_pause</string>
+    <string name="skip_next">skip_next</string>
+    <string name="close">close</string>
 </resources>
