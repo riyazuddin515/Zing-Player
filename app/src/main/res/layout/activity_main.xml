@@ -57,7 +57,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="@string/skip_previous"
-                android:src="@drawable/ic_skip_previous"
+                android:src="@drawable/ic_skip_previous_white"
                 android:visibility="invisible"
                 tools:visibility="visible" />
 
@@ -73,7 +73,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="@string/skip_next"
-                android:src="@drawable/ic_skip_next"
+                android:src="@drawable/ic_skip_next_white"
                 android:visibility="invisible"
                 tools:visibility="visible" />
         </LinearLayout>

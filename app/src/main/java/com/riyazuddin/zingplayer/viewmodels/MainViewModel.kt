@@ -1,5 +1,6 @@
 package com.riyazuddin.zingplayer.viewmodels
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,7 +31,12 @@ class MainViewModel @Inject constructor(
                 MediaItem.Builder()
                     .setUri(song.songUrl)
                     .setMediaId(song.mediaId)
-                    .setMediaMetadata(MediaMetadata.Builder().setTitle(song.title).build())
+                    .setMediaMetadata(
+                        MediaMetadata.Builder()
+                            .setTitle(song.title)
+                            .setMediaUri(Uri.parse(song.imageUrl))
+                            .build()
+                    )
                     .build()
             }
             _songs.postValue(list)

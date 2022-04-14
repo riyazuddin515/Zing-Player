@@ -4,4 +4,7 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class ZingPlayerApplication : Application()
+class ZingPlayerApplication : Application(){
+
+
+}

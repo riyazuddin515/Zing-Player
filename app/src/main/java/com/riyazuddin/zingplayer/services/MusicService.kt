@@ -48,10 +48,10 @@ class MusicService : Service() {
                 super.onIsPlayingChanged(isPlaying)
                 if (isPlaying) {
                     sendBroadcastUpdates(MUSIC_PLAY)
-                    showNotification(currentMusicTitle(), !isPlaying, hasPrevious(), hasNext())
+                    showNotification(getImageUrl(), currentMusicTitle(), !isPlaying, hasPrevious(), hasNext())
                 } else {
                     sendBroadcastUpdates(MUSIC_PAUSE)
-                    showNotification(currentMusicTitle(), true, hasPrevious(), hasNext())
+                    showNotification(getImageUrl(), currentMusicTitle(), true, hasPrevious(), hasNext())
                 }
             }
 
@@ -123,6 +123,7 @@ class MusicService : Service() {
     fun hasPrevious() = exoPlayer.hasPreviousMediaItem()
     fun hasNext() = exoPlayer.hasNextMediaItem()
     fun currentMusicTitle() = exoPlayer.currentMediaItem?.mediaMetadata?.title.toString()
+    fun getImageUrl() = exoPlayer.currentMediaItem?.mediaMetadata?.mediaUri.toString()
 
     fun seek(mediaItemIndex: Int) {
         try {
@@ -133,6 +134,7 @@ class MusicService : Service() {
             exoPlayer.seekTo(mediaItemIndex, 0L)
             play()
             showNotification(
+                getImageUrl(),
                 currentMusicTitle(),
                 false,
                 hasPrevious(),
@@ -144,13 +146,14 @@ class MusicService : Service() {
     }
 
     private fun showNotification(
+        imageUrl: String,
         title: String,
         showPlay: Boolean,
         showPrevious: Boolean,
         showNext: Boolean
     ) {
         val notification =
-            musicNotificationManager.createNotification(title, showPlay, showPrevious, showNext)
+            musicNotificationManager.createNotification(imageUrl, title, showPlay, showPrevious, showNext)
         startForeground(5, notification)
     }
 

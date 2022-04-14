@@ -26,6 +26,7 @@ import com.riyazuddin.zingplayer.services.MusicService
 import com.riyazuddin.zingplayer.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.math.log
 
 private const val TAG = "LogITag"
 
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.i(TAG, "onCreate: activity")
+
         setUpRecyclerView()
         setUpClickListener()
         subscribeToObservers()
@@ -81,6 +84,9 @@ class MainActivity : AppCompatActivity() {
                 bind()
             }
         }
+
+        if (isBounded)
+            showMusicPlayerLayout()
 
     }
 
@@ -122,7 +128,11 @@ class MainActivity : AppCompatActivity() {
             songsAdapter.list = it
         }
         viewModel.mediaItems.observe(this) {
-            musicService.setMediaItem(it)
+            if (isBounded) {
+                musicService.setMediaItem(it)
+            }else{
+                bind()
+            }
         }
     }
 
@@ -143,6 +153,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        Log.i(TAG, "onStart: activity")
         bind()
     }
 
@@ -154,6 +165,8 @@ class MainActivity : AppCompatActivity() {
                     musicService = (binder as MusicService.MusicServiceBinder).getMusicService()
                     isBounded = true
                     Log.i(TAG, "onServiceConnected: ")
+                    if (musicService.isPlaying())
+                        showMusicPlayerLayout()
                     if (rebound) {
                         rebound = false
                         musicService.setMediaItem(viewModel.getMediaItems())
