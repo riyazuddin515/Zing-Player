@@ -6,13 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btnUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Start Uploading"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnSetThumbnails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Thumbnails"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/btnUpload"
+        app:layout_constraintStart_toStartOf="@+id/btnUpload"
+        app:layout_constraintTop_toBottomOf="@+id/btnUpload" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
