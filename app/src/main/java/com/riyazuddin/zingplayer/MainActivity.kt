@@ -20,6 +20,8 @@ import com.riyazuddin.zingplayer.other.Constants.MUSIC_BROADCAST
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_PAUSE
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_PLAY
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_STOP
+import com.riyazuddin.zingplayer.other.Constants.SEEK_POSITION
+import com.riyazuddin.zingplayer.other.Constants.START_SERVICE_INTENT_ACTION
 import com.riyazuddin.zingplayer.services.MusicService
 import com.riyazuddin.zingplayer.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,7 +71,10 @@ class MainActivity : AppCompatActivity() {
 
         songsAdapter.setOnSongClickListener { _, position: Int ->
             if (isBounded) {
-                musicService.seek(position)
+                val intent = Intent(this, MusicService::class.java)
+                intent.action = START_SERVICE_INTENT_ACTION
+                intent.putExtra(SEEK_POSITION, position)
+                startServiceOnAPIBase(intent)
             } else {
                 rebound = true
                 indexToPlayAfterRebound = position
@@ -162,7 +167,6 @@ class MainActivity : AppCompatActivity() {
             }
             val intent = Intent(this, MusicService::class.java)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-            startServiceOnAPIBase(intent)
             LocalBroadcastManager.getInstance(applicationContext).registerReceiver(
                 broadcastReceiver, IntentFilter(
                     MUSIC_BROADCAST

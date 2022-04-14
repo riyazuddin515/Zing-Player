@@ -16,8 +16,10 @@ import com.riyazuddin.zingplayer.other.Constants.MUSIC_BROADCAST
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_PAUSE
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_PLAY
 import com.riyazuddin.zingplayer.other.Constants.MUSIC_STOP
+import com.riyazuddin.zingplayer.other.Constants.SEEK_POSITION
 import com.riyazuddin.zingplayer.other.Constants.SKIP_NEXT
 import com.riyazuddin.zingplayer.other.Constants.SKIP_PREVIOUS
+import com.riyazuddin.zingplayer.other.Constants.START_SERVICE_INTENT_ACTION
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -64,6 +66,10 @@ class MusicService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.i(TAG, "onStartCommand: ")
         when (intent.action) {
+            START_SERVICE_INTENT_ACTION ->{
+                val position = intent.getIntExtra(SEEK_POSITION, 0)
+                seek(position)
+            }
             MUSIC_PLAY -> {
                 play()
             }
