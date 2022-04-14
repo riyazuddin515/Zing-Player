@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.RequestManager
 import com.riyazuddin.zingplayer.adapters.SongsAdapter
 import com.riyazuddin.zingplayer.databinding.ActivityMainBinding
 import com.riyazuddin.zingplayer.other.Constants.BROADCAST_ACTION
@@ -38,6 +39,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var songsAdapter: SongsAdapter
+
+    @Inject
+    lateinit var glide: RequestManager
 
     private lateinit var musicService: MusicService
     private var isBounded = false
@@ -98,6 +102,7 @@ class MainActivity : AppCompatActivity() {
         else
             binding.ivPlayOrPause.setImageResource(R.drawable.ic_play)
         binding.tvTitle.text = musicService.currentMusicTitle()
+        glide.load(viewModel.getSongImageUrl(musicService.currentMediaIndex())).into(binding.ivSongThumbnail)
         binding.musicPlayerLayout.isVisible = true
     }
 

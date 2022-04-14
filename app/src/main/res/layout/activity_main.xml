@@ -32,11 +32,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp"
+            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/ivSongThumbnail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/image"/>
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -46,7 +54,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -59,12 +67,14 @@
                 android:contentDescription="@string/skip_previous"
                 android:src="@drawable/ic_skip_previous_white"
                 android:visibility="invisible"
+                android:layout_gravity="center"
                 tools:visibility="visible" />
 
             <ImageView
                 android:id="@+id/ivPlayOrPause"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:contentDescription="@string/play_pause"
                 android:src="@drawable/ic_play" />
 
@@ -72,6 +82,7 @@
                 android:id="@+id/ivNext"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:contentDescription="@string/skip_next"
                 android:src="@drawable/ic_skip_next_white"
                 android:visibility="invisible"

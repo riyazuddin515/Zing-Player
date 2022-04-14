@@ -109,11 +109,11 @@ class MusicService : Service() {
     }
 
     fun playPrevious() {
-        seek(exoPlayer.currentMediaItemIndex - 1)
+        seek( currentMediaIndex()- 1)
     }
 
     fun playNext() {
-        seek(exoPlayer.currentMediaItemIndex + 1)
+        seek(currentMediaIndex() + 1)
     }
 
     private fun stop() {
@@ -124,6 +124,7 @@ class MusicService : Service() {
     fun hasNext() = exoPlayer.hasNextMediaItem()
     fun currentMusicTitle() = exoPlayer.currentMediaItem?.mediaMetadata?.title.toString()
     fun getImageUrl() = exoPlayer.currentMediaItem?.mediaMetadata?.mediaUri.toString()
+    fun currentMediaIndex() = exoPlayer.currentMediaItemIndex
 
     fun seek(mediaItemIndex: Int) {
         try {

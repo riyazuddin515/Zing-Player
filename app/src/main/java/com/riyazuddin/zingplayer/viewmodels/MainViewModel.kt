@@ -45,4 +45,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun getMediaItems() = mediaItems.value ?: emptyList()
+
+    fun getSongImageUrl(position: Int) = songs.value?.get(position)?.imageUrl ?: ""
 }
